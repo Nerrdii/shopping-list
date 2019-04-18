@@ -1,18 +1,21 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 
-const db = require('./config/keys').mongoURI;
-const items = require('./routes/api/items');
+require('dotenv').config();
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use('/api/items', items);
+app.use(express.json());
+app.use('/api/items', require('./routes/api/items'));
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/auth', require('./routes/api/auth'));
 
 mongoose
-  .connect(db)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true
+  })
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
