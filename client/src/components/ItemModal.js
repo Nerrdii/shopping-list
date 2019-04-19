@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Button,
   Modal,
@@ -14,6 +15,10 @@ import {
 import { addItem } from '../actions/itemActions';
 
 class ItemModal extends Component {
+  static propTypes = {
+    isAuthenticated: PropTypes.bool
+  };
+
   state = {
     modal: false,
     name: ''
@@ -42,12 +47,17 @@ class ItemModal extends Component {
   render() {
     return (
       <div>
-        <Button
-          color="dark"
-          style={{ marginBottom: '2rem' }}
-          onClick={this.toggle}>
-          Add Item
-        </Button>
+        {this.props.isAuthenticated ? (
+          <Button
+            color="dark"
+            style={{ marginBottom: '2rem' }}
+            onClick={this.toggle}>
+            Add Item
+          </Button>
+        ) : (
+          <h4 className="mb-3 ml-4">Please login to manage items</h4>
+        )}
+
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Add Item</ModalHeader>
           <ModalBody>
@@ -74,7 +84,8 @@ class ItemModal extends Component {
 }
 
 const mapStateToProps = state => ({
-  item: state.item
+  item: state.item,
+  isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(

@@ -7,6 +7,13 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { getItems, deleteItem } from '../actions/itemActions';
 
 class ShoppingList extends Component {
+  static propTypes = {
+    getItems: PropTypes.func.isRequired,
+    deleteItem: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool
+  };
+
   componentDidMount() {
     this.props.getItems();
   }
@@ -24,13 +31,15 @@ class ShoppingList extends Component {
           {items.map(({ _id, name }) => (
             <CSSTransition classNames="fade" key={_id} timeout={500}>
               <ListGroupItem>
-                <Button
-                  className="remove-btn"
-                  color="danger"
-                  size="sm"
-                  onClick={this.onDeleteItem.bind(this, _id)}>
-                  &times;
-                </Button>
+                {this.props.isAuthenticated ? (
+                  <Button
+                    className="remove-btn"
+                    color="danger"
+                    size="sm"
+                    onClick={this.onDeleteItem.bind(this, _id)}>
+                    &times;
+                  </Button>
+                ) : null}
                 {name}
               </ListGroupItem>
             </CSSTransition>
@@ -41,14 +50,9 @@ class ShoppingList extends Component {
   }
 }
 
-ShoppingList.propTypes = {
-  getItems: PropTypes.func.isRequired,
-  deleteItem: PropTypes.func.isRequired,
-  item: PropTypes.object.isRequired
-};
-
 const mapStateToProps = state => ({
-  item: state.item
+  item: state.item,
+  isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(
