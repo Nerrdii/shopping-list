@@ -1,18 +1,30 @@
 # Shopping List
 
-## Overview
-
 Shopping list built with the MERN stack.
 
 ## Getting Started
 
+### Install dependencies
+
+```bash
+> npm install
+
+> cd client
+> npm install
 ```
-# Install server dependencies
-npm install
 
-# Install client dependencies
-npm run client-install
+### Setup environment variables
 
-# Start development server
-npm run dev
+Create .env file:
+
+```bash
+> touch .env
+```
+
+Copy variables from `.env.example` to `.env` and replace values.
+
+### Run server
+
+```bash
+> npm run dev
 ```
