@@ -9,10 +9,9 @@ const Item = require('../../models/Item');
   @desc   Get all items
   @access Public
 */
-router.get('/', (req, res) => {
-  Item.find()
-    .sort({ date: -1 })
-    .then(items => res.json(items));
+router.get('/', async (req, res) => {
+  const items = await Item.find().sort({ date: -1 });
+  res.json(items);
 });
 
 /**
@@ -20,12 +19,13 @@ router.get('/', (req, res) => {
   @desc   Create an item
   @access Private
 */
-router.post('/', auth, (req, res) => {
+router.post('/', auth, async (req, res) => {
   const newItem = new Item({
-    name: req.body.name
+    name: req.body.name,
   });
 
-  newItem.save().then(item => res.json(item));
+  const item = await newItem.save();
+  res.json(item);
 });
 
 /**
@@ -33,10 +33,14 @@ router.post('/', auth, (req, res) => {
   @desc   Delete an item
   @access Private
 */
-router.delete('/:id', auth, (req, res) => {
-  Item.findById(req.params.id)
-    .then(item => item.remove().then(() => res.json({ success: true })))
-    .catch(err => res.status(404).json({ success: false }));
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    await item.remove();
+    res.json({ success: true });
+  } catch (err) {
+    res.status(404).json({ success: false });
+  }
 });
 
 module.exports = router;
